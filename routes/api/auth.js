@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const User = require('../../models/User');
 const { body, validationResult } = require('express-validator');
 
 /**
@@ -19,7 +20,7 @@ router.post(
       min: 6,
     }),
   ],
-  (req, res) => {
+  async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({
@@ -27,9 +28,25 @@ router.post(
       });
     }
 
-    console.log(req.body);
-    res.status(501).json({
-      msg: 'Not Implemented',
+    const { name, email, password } = req.body;
+
+    let user = await User.findOne({ email });
+
+    if (user) {
+      return res.status(400).json({ errors: { msg: 'User already exists' } });
+    }
+
+    user = new User({
+      name,
+      email,
+      password,
+    });
+
+    await user.save();
+
+    res.status(201).json({
+      success: true,
+      data: user,
     });
   }
 );

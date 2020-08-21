@@ -16,6 +16,7 @@ UserSchema = new mongoose.Schema({
   },
   avatar: {
     type: String,
+    default: 'my-avatar.jpg',
   },
   createdAt: {
     type: Date,
