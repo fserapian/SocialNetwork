@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../../middleware/auth');
 const User = require('../../models/User');
 const { body, validationResult } = require('express-validator');
 
@@ -60,5 +61,29 @@ router.post(
     }
   }
 );
+
+/**
+ * @desc  Get logged in user
+ * @route GET /api/v1/auth/me
+ * @access private
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
+router.get('/me', auth, async (req, res) => {
+  const user = await User.findById(req.user.id).select('-password');
+
+  if (!user) {
+    return req.status(404).json({
+      success: false,
+      msg: 'Cannot find user',
+    });
+  }
+
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
+});
 
 module.exports = router;
