@@ -6,7 +6,7 @@ const { body, validationResult } = require('express-validator');
 
 /**
  * @desc    Register user
- * @route   POST /api/users/register
+ * @route   POST /api/auth/register
  * @access  public
  *
  * @param {Object} req
@@ -49,6 +49,59 @@ router.post(
       const token = user.getSignedJwtToken();
 
       res.status(201).json({
+        success: true,
+        token,
+      });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({
+        success: false,
+        error: 'Server Error',
+      });
+    }
+  }
+);
+
+/**
+ * @desc    Login user
+ * @route   POST /api/auth/login
+ * @access  public
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
+router.post(
+  '/login',
+  [
+    body('email', 'Email is not valid').isEmail(),
+    body('password', 'Password is required').exists(),
+  ],
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        errors: errors.array(),
+      });
+    }
+
+    const { email, password } = req.body;
+
+    try {
+      let user = await User.findOne({ email });
+
+      if (!user) {
+        return res.status(400).json({ errors: { msg: 'Invalid credentials' } });
+      }
+
+      const passwordsMatch = await user.matchPasswords(password, user.password);
+
+      if (!passwordsMatch) {
+        return res.status(400).json({ errors: { msg: 'Invalid credentials' } });
+      }
+
+      const token = user.getSignedJwtToken();
+
+      res.status(200).json({
         success: true,
         token,
       });
