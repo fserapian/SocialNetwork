@@ -71,19 +71,27 @@ router.post(
  * @param {Object} res
  */
 router.get('/me', auth, async (req, res) => {
-  const user = await User.findById(req.user.id).select('-password');
+  try {
+    const user = await User.findById(req.user.id).select('-password');
 
-  if (!user) {
-    return req.status(404).json({
+    if (!user) {
+      return req.status(404).json({
+        success: false,
+        msg: 'Cannot find user',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: user,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({
       success: false,
-      msg: 'Cannot find user',
+      msg: 'Server Error',
     });
   }
-
-  res.status(200).json({
-    success: true,
-    data: user,
-  });
 });
 
 module.exports = router;
