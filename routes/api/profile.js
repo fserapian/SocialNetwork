@@ -2,6 +2,7 @@ const express = require('express');
 const auth = require('../../middleware/auth');
 const { body, validationResult } = require('express-validator');
 const Profile = require('../../models/Profile');
+const User = require('../../models/User');
 
 const router = express.Router();
 
@@ -187,6 +188,51 @@ router.get('/user/:userId', async (req, res) => {
         error: `Cannot find profile of user id ${req.params.userId}`,
       });
     }
+    res.status(500).json({
+      success: false,
+      error: 'Server Error',
+    });
+  }
+});
+
+/**
+ * @desc    Delete profile, user and posts
+ * @route   DELETE /api/profile
+ * @access  private
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
+router.delete('/', auth, async (req, res) => {
+  // TODO: delete posts associated with the user.
+
+  try {
+    // Delete profile
+    const profile = await Profile.findOneAndDelete({ user: req.user.id });
+
+    if (!profile) {
+      return res.status(404).json({
+        success: false,
+        error: `Profile not found`,
+      });
+    }
+
+    // Delete user
+    const user = await User.findOneAndDelete({ _id: req.user.id });
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        error: `User not found`,
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: {},
+    });
+  } catch (err) {
+    console.error(err);
     res.status(500).json({
       success: false,
       error: 'Server Error',
