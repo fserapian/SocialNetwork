@@ -45,9 +45,11 @@ router.post(
 
       await user.save();
 
+      const token = user.getSignedJwtToken();
+
       res.status(201).json({
         success: true,
-        data: user,
+        token,
       });
     } catch (err) {
       console.error(err);
