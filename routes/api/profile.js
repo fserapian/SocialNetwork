@@ -1,6 +1,7 @@
 const express = require('express');
 const auth = require('../../middleware/auth');
 const { body, validationResult } = require('express-validator');
+const axios = require('axios').default;
 const Profile = require('../../models/Profile');
 const User = require('../../models/User');
 
@@ -442,5 +443,15 @@ router.delete('/education/:eduId', auth, async (req, res) => {
     });
   }
 });
+
+/**
+ * @desc    Get github repos of username in profile
+ * @route   GET /api/profile/github/:username
+ * @access  private
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
+router.get('/github/:username', auth, (req, res) => {});
 
 module.exports = router;
