@@ -112,4 +112,51 @@ router.get('/:id', auth, async (req, res) => {
   }
 });
 
+/**
+ * @desc    Delete post by id
+ * @route   DELETE /api/posts/:id
+ * @access  private
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
+router.delete('/:id', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+
+    if (!post) {
+      return res.status(404).json({
+        success: false,
+        error: `No post found for the id ${req.params.id}`,
+      });
+    }
+
+    // Check user
+    if (req.user.id !== post.user.toString()) {
+      return res.status(401).json({
+        success: false,
+        error: 'User cannot delete this post',
+      });
+    }
+
+    await post.remove();
+
+    res.status(200).json({
+      success: true,
+      data: post,
+    });
+  } catch (err) {
+    console.error(err);
+    if (err.kind === 'ObjectId') {
+      return res.status(404).json({
+        error: `No post found from the id ${req.params.id}`,
+      });
+    }
+    res.status(500).json({
+      success: false,
+      error: 'Server Error',
+    });
+  }
+});
+
 module.exports = router;
