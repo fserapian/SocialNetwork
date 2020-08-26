@@ -50,4 +50,29 @@ router.post(
   }
 );
 
+/**
+ * @desc    Get all posts
+ * @route   GET /api/posts
+ * @access  private
+ *
+ * @param {Object} req
+ * @param {Object} res
+ */
+router.get('/', auth, async (req, res) => {
+  try {
+    const posts = await Post.find().sort({ createdAt: -1 });
+
+    res.status(200).json({
+      success: true,
+      data: posts,
+    });
+  } catch (error) {
+    console.error(err.message);
+    res.status(500).json({
+      success: false,
+      error: 'Server Error',
+    });
+  }
+});
+
 module.exports = router;
