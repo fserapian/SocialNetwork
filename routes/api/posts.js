@@ -4,6 +4,7 @@ const auth = require('../../middleware/auth');
 const { body, validationResult } = require('express-validator');
 const Post = require('../../models/Post');
 const User = require('../../models/User');
+const { findByIdAndDelete } = require('../../models/User');
 
 /**
  * @desc    Add post
@@ -292,5 +293,58 @@ router.post(
     }
   }
 );
+
+/**
+ * @desc    Delete comment
+ * @route   DELETE /api/posts/comment/:id/:commentId
+ * @access  private
+ *
+ * @param {Object} req
+ * @param {Object} res
+ * @param {String} id
+ */
+router.delete('/comment/:id/:commentId', auth, async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    const comment = post.comments.find(
+      (comment) => comment.id === req.params.commentId
+    );
+
+    // Check if comment exists
+    if (!comment) {
+      return res.status(404).json({
+        success: false,
+        error: `No comment found with id ${req.params.commentId}`,
+      });
+    }
+
+    // Check if user is owner of the comment
+    if (req.user.id !== comment.user.toString()) {
+      return res.status(401).json({
+        success: false,
+        error: 'User not authorized to delete this comment',
+      });
+    }
+
+    const removeIndex = post.comments
+      .map((comment) => comment.id)
+      .indexOf(req.params.commentId);
+
+    post.comments.splice(removeIndex, 1);
+
+    await post.save();
+
+    res.status(200).json({
+      success: true,
+      data: post.comments,
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      success: false,
+      error: 'Server Error',
+    });
+  }
+});
 
 module.exports = router;
