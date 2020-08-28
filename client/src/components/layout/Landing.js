@@ -7,7 +7,10 @@ export const Landing = () => {
       <h1 className="text-6xl font-bold text-gray-800 ">Social Network</h1>
       <p>
         The best site to connect all developers, and share great ideas around
-        the globe 🌎
+        the globe{' '}
+        <span role="img" aria-label="earth">
+          🌎
+        </span>
       </p>
       <div className="buttons mt-6"></div>
       <Link

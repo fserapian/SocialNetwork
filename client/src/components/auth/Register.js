@@ -14,7 +14,7 @@ export const Register = () => {
   const onChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
       console.log('Passwords do not match');
@@ -27,7 +27,12 @@ export const Register = () => {
     <Fragment>
       <div className="heading mb-2">
         <h1 className="text-6xl text-gray-900 font-bold">Register with us</h1>
-        <p>Create your account down here 👇</p>
+        <p>
+          Create your account down here{' '}
+          <span role="img" aria-label="down-pointer">
+            👇
+          </span>
+        </p>
       </div>
       <form onSubmit={(e) => onSubmit(e)}>
         <div className="py-3">
@@ -67,6 +72,7 @@ export const Register = () => {
             value={password}
             onChange={(e) => onChange(e)}
             placeholder="Password"
+            autoComplete="on"
             required
             minLength="6"
           />
@@ -80,6 +86,7 @@ export const Register = () => {
             value={confirmPassword}
             onChange={(e) => onChange(e)}
             placeholder="Confirm Password"
+            autoComplete="on"
             required
             minLength="6"
           />
@@ -93,8 +100,7 @@ export const Register = () => {
           Already have an account?{' '}
           <Link to="/login" className="text-indigo-600">
             Sign in
-          </Link>{' '}
-          👈
+          </Link>
         </p>
       </form>
     </Fragment>

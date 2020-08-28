@@ -10,9 +10,9 @@ export const Navbar = () => {
       </Link>
       <ul className="flex items-center">
         <li className="px-3">
-          <a href="#" className="hover:text-purple-200 hover:underline">
+          <Link to="/" className="hover:text-purple-200 hover:underline">
             Developers
-          </a>
+          </Link>
         </li>
         <li className="px-3">
           <Link
