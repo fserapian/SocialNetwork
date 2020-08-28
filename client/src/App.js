@@ -10,13 +10,17 @@ const App = () => (
   <Router>
     <Fragment>
       <Navbar />
-      <section className="container mx-auto px-4">
-        <Switch>
-          <Route exact path="/" component={Landing} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/login" component={Login} />
-        </Switch>
-      </section>
+      <div className="container mx-auto px-4">
+        <Route exact path="/" component={Landing} />
+      </div>
+      <div className="grid grid-cols-8">
+        <div className="col-start-3 col-span-4">
+          <Switch>
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/login" component={Login} />
+          </Switch>
+        </div>
+      </div>
     </Fragment>
   </Router>
 );

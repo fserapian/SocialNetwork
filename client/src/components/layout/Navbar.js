@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 export const Navbar = () => {
   return (
     <header className="border-b text-white p-3 flex justify-between items-center bg-gray-800 mb-3">
-      <Link to="/" className="logo text-xl">
+      <Link to="/" className="logo text-xl px-3">
         Social Network
       </Link>
       <ul className="flex items-center">
