@@ -3,6 +3,8 @@ import {
   REGISTER_FAIL,
   USER_LOADED,
   AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
 } from './types';
 import { setAlert } from './alert';
 import axios from 'axios';
@@ -34,12 +36,13 @@ export const register = ({ name, email, password }) => (dispatch) => {
   // Post request
   axios
     .post('http://localhost:5000/api/auth/register', { name, email, password })
-    .then((res) =>
+    .then((res) => {
       dispatch({
         type: REGISTER_SUCCESS,
         payload: res.data.token,
-      })
-    )
+      });
+      dispatch(loadUser());
+    })
     .catch((err) => {
       const errors = err.response.data.errors;
 
@@ -47,6 +50,28 @@ export const register = ({ name, email, password }) => (dispatch) => {
 
       dispatch({
         type: REGISTER_FAIL,
+      });
+    });
+};
+
+export const login = (email, password) => (dispatch) => {
+  // Post request
+  axios
+    .post('http://localhost:5000/api/auth/login', { email, password })
+    .then((res) => {
+      dispatch({
+        type: LOGIN_SUCCESS,
+        payload: res.data.token,
+      });
+      dispatch(loadUser());
+    })
+    .catch((err) => {
+      const errors = err.response.data.errors;
+
+      errors.forEach((err) => dispatch(setAlert(err.msg, 'danger')));
+
+      dispatch({
+        type: LOGIN_FAIL,
       });
     });
 };

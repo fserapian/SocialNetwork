@@ -92,13 +92,17 @@ router.post(
       let user = await User.findOne({ email });
 
       if (!user) {
-        return res.status(400).json({ errors: { msg: 'Invalid credentials' } });
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'Invalid credentials' }] });
       }
 
       const passwordsMatch = await user.matchPasswords(password, user.password);
 
       if (!passwordsMatch) {
-        return res.status(400).json({ errors: { msg: 'Invalid credentials' } });
+        return res
+          .status(400)
+          .json({ errors: [{ msg: 'Invalid credentials' }] });
       }
 
       const token = user.getSignedJwtToken();
