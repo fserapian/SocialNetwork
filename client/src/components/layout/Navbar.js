@@ -4,13 +4,15 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logout } from '../../actions/auth';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons';
 
 const Navbar = (props) => {
   const authLinks = (
     <ul className="flex items-center">
       <li className="px-3">
         <a href="#!" onClick={props.logout}>
-          Logout
+          <FontAwesomeIcon icon={faSignOutAlt} /> Logout
         </a>
       </li>
     </ul>
