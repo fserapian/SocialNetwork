@@ -11,13 +11,15 @@ import { setAlert } from './alert';
 import axios from 'axios';
 import setAuthToken from '../utils/setAuthToken';
 
+const baseUrl = 'http://localhost:5000/api/auth';
+
 export const loadUser = () => (dispatch) => {
   if (localStorage.token) {
     setAuthToken(localStorage.token);
   }
 
   axios
-    .get('http://localhost:5000/api/auth/me')
+    .get(`${baseUrl}/me`)
     .then((res) => {
       if (res.data.success) {
         dispatch({
@@ -36,7 +38,7 @@ export const loadUser = () => (dispatch) => {
 export const register = ({ name, email, password }) => (dispatch) => {
   // Post request
   axios
-    .post('http://localhost:5000/api/auth/register', { name, email, password })
+    .post(`${baseUrl}/register`, { name, email, password })
     .then((res) => {
       dispatch({
         type: REGISTER_SUCCESS,
@@ -58,7 +60,7 @@ export const register = ({ name, email, password }) => (dispatch) => {
 export const login = (email, password) => (dispatch) => {
   // Post request
   axios
-    .post('http://localhost:5000/api/auth/login', { email, password })
+    .post(`${baseUrl}/login`, { email, password })
     .then((res) => {
       dispatch({
         type: LOGIN_SUCCESS,
