@@ -49,7 +49,9 @@ export const register = ({ name, email, password }) => (dispatch) => {
     .catch((err) => {
       const errors = err.response.data.errors;
 
-      errors.forEach((err) => dispatch(setAlert(err.msg, 'danger')));
+      if (errors) {
+        errors.forEach((err) => dispatch(setAlert(err.msg, 'danger')));
+      }
 
       dispatch({
         type: REGISTER_FAIL,
